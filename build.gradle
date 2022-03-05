@@ -13,8 +13,8 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = "UTF-8"
-        it.sourceCompatibility = JavaVersion.VERSION_1_8
-        it.targetCompatibility = JavaVersion.VERSION_1_8
+        it.sourceCompatibility = JavaVersion.VERSION_1_10
+        it.targetCompatibility = JavaVersion.VERSION_1_10
     }
 
 }
