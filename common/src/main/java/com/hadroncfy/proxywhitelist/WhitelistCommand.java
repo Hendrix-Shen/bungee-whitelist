@@ -74,7 +74,6 @@ public class WhitelistCommand {
                         Profile p = whitelist.createUUID(args[1]);
                         if (p != null){
                             whitelist.update(p.uuid, p.name);
-                            return String.format("已将玩家 %s(%s) 添加至白名单！", p.name, p.uuid);
                             sender.sendResultMessage(String.format("Added %s (%s) to whitelist.", p.name, p.uuid));
                         }
                         else {
