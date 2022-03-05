@@ -3,6 +3,10 @@ package com.hadroncfy.proxywhitelist;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class WhitelistCommand {
@@ -34,6 +38,30 @@ public class WhitelistCommand {
         }
 
         return ret;
+    }
+
+    public class addWhitelistThread implements Callable<String> {
+        final String playerName;
+        public addWhitelistThread(String playerName) {
+            this.playerName = playerName;
+        }
+
+        @Override
+        public String call() {
+            try {
+                Profile p = whitelist.createUUID(this.playerName);
+                if (p != null){
+                    whitelist.update(p.uuid, p.name);
+                    return String.format("Added %s (%s) to whitelist.", p.name, p.uuid);
+                }
+                else {
+                    return String.format("Player %s not found.", this.playerName);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Failed to retrieve UUID.";
+            }
+        }
     }
 
     public void exec(ICommandSender sender, String[] args) {
@@ -70,20 +98,13 @@ public class WhitelistCommand {
 
             switch (args[0]) {
                 case "add":
-                    new Thread(() -> {
-                        try {
-                            Profile p = whitelist.createUUID(args[1]);
-                            if (p != null) {
-                                whitelist.update(p.uuid, p.name);
-                                sender.sendResultMessage(String.format("Added %s (%s) to whitelist.", p.name, p.uuid));
-                            } else {
-                                sender.sendResultMessage(String.format("Player %s not found.", args[1]));
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            sender.sendResultMessage("Failed to retrieve UUID.");
-                        }
-                    }).start();
+                    ExecutorService exec = Executors.newCachedThreadPool();
+                    try {
+                        sender.sendResultMessage(exec.submit(new addWhitelistThread(args[1])).get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        sender.sendResultMessage("An error occurred while adding a whitelist.");
+                        e.printStackTrace();
+                    }
                     return;
                 case "remove":
                     if (whitelist.removeByName(args[1])) {
