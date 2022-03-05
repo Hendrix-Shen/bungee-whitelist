@@ -1,16 +1,8 @@
 package com.hadroncfy.proxywhitelist.bungeecord;
 
-import java.io.File;
-
-import com.hadroncfy.proxywhitelist.Config;
-import com.hadroncfy.proxywhitelist.ICommandSender;
-import com.hadroncfy.proxywhitelist.ILogger;
-import com.hadroncfy.proxywhitelist.IPlugin;
-import com.hadroncfy.proxywhitelist.Whitelist;
-
+import com.hadroncfy.proxywhitelist.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -18,23 +10,25 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
 
+import java.io.File;
+
 public class WhitelistPlugin extends Plugin implements IPlugin, Listener {
 
     private File dataPath;
-    private Whitelist whitelist = new Whitelist(this);
-    private ILogger loggerImpl = new ILogger(){
-    
+    private final Whitelist whitelist = new Whitelist(this);
+    private final ILogger loggerImpl = new ILogger() {
+
         @Override
         public void info(String msg) {
             getLogger().info(msg);
         }
-    
+
         @Override
         public void error(String msg) {
             getLogger().severe(msg);
         }
     };
-  
+
     @Override
     public void onEnable() {
         dataPath = getDataFolder();
@@ -55,7 +49,7 @@ public class WhitelistPlugin extends Plugin implements IPlugin, Listener {
     }
 
     @EventHandler
-    public void onNetworkJoin(LoginEvent e){
+    public void onNetworkJoin(LoginEvent e) {
         whitelist.checkPlayerJoin(new PendingPlayer(e.getConnection()));
     }
 

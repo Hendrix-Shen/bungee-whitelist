@@ -1,16 +1,16 @@
 package com.hadroncfy.proxywhitelist;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class MinecraftAPI {
     private static final String HOST = "api.mojang.com";
@@ -25,10 +25,9 @@ public class MinecraftAPI {
             connection.setReadTimeout(15000);
             connection.setUseCaches(false);
             is = connection.getInputStream();
-    
+
             return IOUtils.toString(is, Charsets.UTF_8);
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(is);
         }
     }
@@ -37,15 +36,15 @@ public class MinecraftAPI {
         URL u = new URL("https", HOST, UUID_ENDPOINT + name);
         // Gson gson = new Gson();
         String responseText = doHttpGet(u);
-        if (responseText.equals("")){
+        if (responseText.equals("")) {
             return null;
         }
         UUIDResponse response = gson.fromJson(responseText, UUIDResponse.class);
         return Profile.fromResponse(response);
     }
 
-    public static Profile getOfflineUUID(String name){
-        UUID uuid =  UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+    public static Profile getOfflineUUID(String name) {
+        UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
         return new Profile(uuid, name);
     }
 }

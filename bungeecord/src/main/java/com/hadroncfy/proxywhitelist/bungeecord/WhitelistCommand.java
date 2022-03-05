@@ -2,15 +2,13 @@ package com.hadroncfy.proxywhitelist.bungeecord;
 
 import com.hadroncfy.proxywhitelist.ICommandSender;
 import com.hadroncfy.proxywhitelist.Whitelist;
-
-
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 public class WhitelistCommand extends Command implements TabExecutor {
-    private Whitelist whitelist;
+    private final Whitelist whitelist;
 
     public WhitelistCommand(Whitelist whitelist) {
         super("bwhitelist", "bungeewhitelist.use");
@@ -24,13 +22,13 @@ public class WhitelistCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        whitelist.getWhitelistCommand().exec(new ICommandSender(){
-        
+        whitelist.getWhitelistCommand().exec(new ICommandSender() {
+
             @Override
             public void sendResultMessage(String msg) {
-                sender.sendMessage(new TextComponent(msg));
+                sender.sendMessage(new TextComponent(msg).getText());
             }
-        
+
             @Override
             public String getLabel() {
                 return sender.getName();

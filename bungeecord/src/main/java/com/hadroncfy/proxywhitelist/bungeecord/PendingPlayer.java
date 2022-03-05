@@ -1,18 +1,18 @@
 package com.hadroncfy.proxywhitelist.bungeecord;
 
-import java.util.UUID;
-
 import com.hadroncfy.proxywhitelist.IPlayer;
-
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
 
-public class PendingPlayer implements IPlayer {
-    private PendingConnection c;
+import java.util.UUID;
 
-    public PendingPlayer(PendingConnection p){
+public class PendingPlayer implements IPlayer {
+    private final PendingConnection c;
+
+    public PendingPlayer(PendingConnection p) {
         c = p;
     }
+
     @Override
     public void sendResultMessage(String msg) {
     }
@@ -36,5 +36,5 @@ public class PendingPlayer implements IPlayer {
     public String getLabel() {
         return c.getName();
     }
-    
+
 }
