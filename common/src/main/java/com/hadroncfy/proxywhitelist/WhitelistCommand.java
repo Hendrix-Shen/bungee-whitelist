@@ -42,15 +42,15 @@ public class WhitelistCommand {
         if (args.length == 1) {
             if (args[0].equals("on")) {
                 whitelist.setEnabled(true);
-                ctx.broadcast(sender, "White list is now enabled");
+                sender.sendResultMessage("White list is now enabled");
                 return;
             } else if (args[0].equals("off")) {
                 whitelist.setEnabled(false);
-                ctx.broadcast(sender, "White list is now disabled");
+                sender.sendResultMessage("White list is now disabled");
                 return;
             } else if (args[0].equals("reload")) {
                 whitelist.loadWhitelist();
-                ctx.broadcast(sender, "Reloaded white list");
+                sender.sendResultMessage("Reloaded white list");
                 return;
             } else if (args[0].equals("list")) {
                 List<Profile> players = whitelist.getPlayers();
@@ -74,11 +74,11 @@ public class WhitelistCommand {
                         Profile p = whitelist.createUUID(args[1]);
                         if (p != null){
                             whitelist.update(p.uuid, p.name);
-                            sender.sendResultMessage("Done");
-                            ctx.broadcast(sender, "Added " + p.name + "(" + p.uuid.toString() + ") to white list.");
+                            return String.format("已将玩家 %s(%s) 添加至白名单！", p.name, p.uuid);
+                            sender.sendResultMessage(String.format("Added %s (%s) to whitelist.", p.name, p.uuid));
                         }
                         else {
-                            sender.sendResultMessage("Player " + args[1] + " not found.");
+                            sender.sendResultMessage(String.format("Player %s not found.", args[1]));
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -89,7 +89,7 @@ public class WhitelistCommand {
             }
             else if (args[0].equals("remove")){
                 if (whitelist.removeByName(args[1])){
-                    ctx.broadcast(sender, "Removed " + args[1] + " from white list.");
+                    sender.sendResultMessage(String.format("Removed %s from white list.", args[1]));
                 }
                 else {
                     sender.sendResultMessage("Player not in the white list.");
